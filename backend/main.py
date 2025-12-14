@@ -1,12 +1,14 @@
 from fastapi import FastAPI, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
 from pathlib import Path
+from fastapi.responses import FileResponse
 import shutil
 import json
 
 from bom_parser import parse_bom_pdf
 from checklist import generate_checklist
 from bom_full_parser import parse_full_bom
+from ga_handler import save_ga
 # ✅ APP MUST BE DEFINED FIRST
 app = FastAPI()
 
@@ -68,5 +70,14 @@ def get_bom_details(find_number: str):
     key = str(find_number).strip()
     return bom.get(key, {})
 
+@app.post("/upload/ga")
+async def upload_ga(file: UploadFile = File(...)):
+    filename = save_ga(file)
+    return {"message": "GA uploaded", "filename": filename}
 
+
+@app.get("/ga/{filename}")
+def get_ga(filename: str):
+    ga_file = Path(__file__).parent / "ga" / filename
+    return FileResponse(ga_file)
 

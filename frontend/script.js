@@ -101,4 +101,32 @@ async function loadDetails(findNumber) {
     `;
     tbody.appendChild(tr);
   }
+
 }
+
+let gaFilename = null;
+
+async function uploadGA() {
+  const fileInput = document.getElementById("gaFile");
+
+  if (!fileInput.files.length) {
+    alert("Please select GA file");
+    return;
+  }
+
+  const file = fileInput.files[0];
+  const formData = new FormData();
+  formData.append("file", file);
+
+  const res = await fetch(`${API}/upload/ga`, {
+    method: "POST",
+    body: formData
+  });
+
+  const data = await res.json();
+  gaFilename = data.filename;
+
+  document.getElementById("gaViewer").src =
+    `${API}/ga/${gaFilename}`;
+}
+

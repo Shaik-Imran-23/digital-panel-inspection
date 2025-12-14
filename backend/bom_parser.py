@@ -8,6 +8,20 @@ def normalize(text):
     return re.sub(r"\s+", " ", text.strip().upper())
 
 
+def find_number_key(value):
+    """
+    Extract numeric part from FIND NUMBER safely.
+    Examples:
+    '10.' -> 10
+    '10'  -> 10
+    '10A' -> 10
+    """
+    if not value:
+        return 0
+    match = re.search(r"\d+", str(value))
+    return int(match.group()) if match else 0
+
+
 def parse_bom_pdf(pdf_path: str):
     """
     Accurate BOM parser using TABLE-FIRST approach.
@@ -17,7 +31,7 @@ def parse_bom_pdf(pdf_path: str):
     """
 
     items = {}
-    
+
     with pdfplumber.open(pdf_path) as pdf:
         for page in pdf.pages:
             tables = page.extract_tables()
@@ -47,13 +61,14 @@ def parse_bom_pdf(pdf_path: str):
                     find_no = str(find_no).strip()
                     desc = re.sub(r"\s+", " ", desc.strip())
 
-                    items[find_no] = desc  # auto deduplicate
+                    # Deduplicate by find number
+                    items[find_no] = desc
 
-    # Convert to sorted list
+    # Convert to sorted list (robust against '10.', '10A', etc.)
     return [
         {
             "find_number": k,
             "part_description": v
         }
-        for k, v in sorted(items.items(), key=lambda x: int(x[0]))
+        for k, v in sorted(items.items(), key=lambda x: find_number_key(x[0]))
     ]
