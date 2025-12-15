@@ -15,7 +15,7 @@
 
 <hr/>
 
-<!-- Checklist Table -->
+<!-- Checklist -->
 <table>
   <thead>
     <tr>
@@ -28,9 +28,10 @@
   <tbody id="checklistBody"></tbody>
 </table>
 
-<h3>Selected Component Details</h3>
+<hr/>
 
-<table id="detailsTable" border="1">
+<h3>Selected Component Details</h3>
+<table id="detailsTable">
   <tbody></tbody>
 </table>
 
@@ -43,11 +44,22 @@
 <hr/>
 
 <h3>GA Viewer</h3>
-<iframe id="gaViewer" width="100%" height="500px"></iframe>
 
-<hr/>
+<div id="gaControls">
+  <button onclick="prevPage()">◀ Prev</button>
+  <span id="pageInfo"></span>
+  <button onclick="nextPage()">Next ▶</button>
+</div>
 
+<div id="pdfContainer">
+  <canvas id="pdfCanvas"></canvas>
+  <div id="highlightLayer"></div>
+</div>
+
+<!-- PDF.js -->
+<script src="pdfjs/pdf.js"></script>
+<script src="ga_mapping.js"></script>
 <script src="script.js"></script>
+
 </body>
 </html>
-
