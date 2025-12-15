@@ -24,6 +24,7 @@ th {
 
 #pdfCanvas {
   border: 1px solid #444;
+  display: block;
 }
 
 #highlightLayer {
